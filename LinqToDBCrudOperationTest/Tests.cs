@@ -21,12 +21,10 @@ namespace LinqToDBCrudOperationTest
         [Table]
         public class TestTable
         {
-            [PrimaryKey, Identity]
-            public int ID;
-            [Column(Length = 50), NotNull]
-            public string Name;
-            [Column(Length = 250), Nullable]
-            public string Description;
+            [PrimaryKey, Identity] public int ID;
+            [Column(Length = 50), NotNull] public string Name;
+            [Column(Length = 250), Nullable] public string Description;
+            [Column] public DateTime? CreatedOn;
         }
 
         [Test]
