@@ -32,10 +32,22 @@ namespace LinqToDBCrudOperationTest
         [Test]
         public void CreateTest([ValuesAttribute(ProviderName.SqlServer, ProviderName.PostgreSQL)]string configString)
         {
-            using(var db = new DataConnection(configString))
+            using (var db = new DataConnection(configString))
             {
                 try{ db.DropTable<TestTable>(); } catch { }
                 db.CreateTable<TestTable>();
+            }
+        }
+
+        [Test]
+        public void InsertTest([ValuesAttribute(ProviderName.SqlServer, ProviderName.PostgreSQL)]string configString)
+        {
+            using (var db = new DataConnection(configString))
+            {
+                db.Insert<TestTable>(new TestTable
+                {
+                    Name = "Crezy Frog",
+                });
             }
         }
     }
