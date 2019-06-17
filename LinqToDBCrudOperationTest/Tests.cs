@@ -46,8 +46,20 @@ namespace LinqToDBCrudOperationTest
             {
                 db.Insert<TestTable>(new TestTable
                 {
-                    Name = "Crezy Frog",
+                    Name = "Crazy Frog",
                 });
+            }
+        }
+        [Test]
+        public void InsertTest2([ValuesAttribute(ProviderName.SqlServer, ProviderName.PostgreSQL)]string configString)
+        {
+            using (var db = new DataConnection(configString))
+            {
+                db.GetTable<TestTable>()
+                    .Insert(() => new TestTable
+                    {
+                        Name = "Crazy Frog",
+                    });
             }
         }
     }
