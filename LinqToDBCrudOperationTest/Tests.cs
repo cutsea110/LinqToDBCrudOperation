@@ -23,9 +23,9 @@ namespace LinqToDBCrudOperationTest
         {
             [PrimaryKey, Identity]
             public int ID;
-            [Column, NotNull]
+            [Column(Length = 50), NotNull]
             public string Name;
-            [Column, Nullable]
+            [Column(Length = 250), Nullable]
             public string Description;
         }
 
