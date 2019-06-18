@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
 using NUnit.Framework;
-
-using System.Data.SqlTypes;
 using System.Linq;
+using System.Diagnostics;
 
 namespace LinqToDBCrudOperationTest
 {
@@ -16,7 +14,7 @@ namespace LinqToDBCrudOperationTest
         static Tests()
         {
             DataConnection.TurnTraceSwitchOn();
-            DataConnection.WriteTraceLine = (msg, context) => Debug.WriteLine(msg, context);
+            DataConnection.WriteTraceLine = (msg, context) => Console.WriteLine(msg, context);
         }
 
         [Table]
@@ -86,9 +84,37 @@ namespace LinqToDBCrudOperationTest
                         db.GetTable<TestTable2>(),
                         t => new TestTable2
                         {
-                            Name = t.Name + "II",
+                            Name = t.Name + " II",
                             CreatedOn = t.CreatedOn.Value.AddDays(1),
                         });
+            }
+        }
+
+        [Test]
+        public void InsertTest4([ValuesAttribute(ProviderName.SqlServer, ProviderName.PostgreSQL)]string configString)
+        {
+            using (var db = new DataConnection(configString))
+            {
+                db.GetTable<TestTable>()
+                    .Where(t => t.Name == "Crazy Frog")
+                    .Into(db.GetTable<TestTable2>())
+                        .Value(t => t.Name, t => t.Name + " II")
+                        .Value(t => t.CreatedOn, t => t.CreatedOn.Value.AddDays(1))
+                    .Insert();
+            }
+        }
+        [Test]
+        public void InsertWithIdentityTest([ValuesAttribute(ProviderName.SqlServer, ProviderName.PostgreSQL)]string configString)
+        {
+            using (var db = new DataConnection(configString))
+            {
+                var identity = db.GetTable<TestTable>()
+                    .InsertWithIdentity(() => new TestTable
+                    {
+                        Name = "Crazy Frog",
+                        CreatedOn = Sql.CurrentTimestamp,
+                    });
+                Console.WriteLine(identity);
             }
         }
     }
