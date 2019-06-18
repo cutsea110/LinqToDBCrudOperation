@@ -161,5 +161,19 @@ namespace LinqToDBCrudOperationTest
                     });
             }
         }
+
+        [Test]
+        public void UpdateTest([ValuesAttribute(ProviderName.SqlServer, ProviderName.PostgreSQL)]string configString)
+        {
+            using (var db = new DataConnection(configString))
+            {
+                db.Update(
+                    new TestTable3
+                    {
+                        ID = 5,
+                        Name = "Crazy Frog",
+                    });
+            }
+        }
     }
 }
