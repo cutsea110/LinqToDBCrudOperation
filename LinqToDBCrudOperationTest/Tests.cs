@@ -253,5 +253,23 @@ namespace LinqToDBCrudOperationTest
                     );
             }
         }
+
+        [Test]
+        public void WindowFunctionTest([ValuesAttribute(ProviderName.SqlServer, ProviderName.PostgreSQL)]string configString)
+        {
+            using (var db = new DataConnection(configString))
+            {
+                var q = db.GetTable<TestTable>()
+                    .Select(t => new
+                    {
+                        row_number = Sql.Ext.RowNumber().Over().OrderBy(t.ID).ToValue(),
+                        rank = Sql.Ext.Rank().Over().OrderBy(t.ID).ToValue(),
+                        rank_dense = Sql.Ext.DenseRank().Over().OrderBy(t.ID).ToValue(),
+                        moving_avg = Sql.Ext.Average<double>(t.ID).Over().OrderBy(t.ID).Range.Between.UnboundedPreceding.And.CurrentRow.ToValue(),
+                    });
+                foreach (var c in q)
+                    Console.WriteLine(c);
+            }
+        }
     }
 }
