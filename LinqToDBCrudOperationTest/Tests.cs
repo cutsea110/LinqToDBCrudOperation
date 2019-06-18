@@ -35,6 +35,13 @@ namespace LinqToDBCrudOperationTest
             [Column] public DateTime? CreatedOn;
         }
 
+        [Table]
+        public class TestTable3
+        {
+            [PrimaryKey] public int ID;
+            [Column(Length = 50), NotNull] public string Name;
+        }
+
         [Test]
         public void CreateTest([ValuesAttribute(ProviderName.SqlServer, ProviderName.PostgreSQL)]string configString)
         {
@@ -44,6 +51,8 @@ namespace LinqToDBCrudOperationTest
                 db.CreateTable<TestTable>();
                 try { db.DropTable<TestTable2>(); } catch { }
                 db.CreateTable<TestTable2>();
+                try { db.DropTable<TestTable3>(); } catch { }
+                db.CreateTable<TestTable3>();
             }
         }
 
@@ -103,6 +112,7 @@ namespace LinqToDBCrudOperationTest
                     .Insert();
             }
         }
+
         [Test]
         public void InsertWithIdentityTest([ValuesAttribute(ProviderName.SqlServer, ProviderName.PostgreSQL)]string configString)
         {
@@ -114,6 +124,26 @@ namespace LinqToDBCrudOperationTest
                         Name = "Crazy Frog",
                         CreatedOn = Sql.CurrentTimestamp,
                     });
+                Console.WriteLine(identity);
+            }
+        }
+
+        [Test]
+        public void InsertOrUpdateTest([ValuesAttribute(ProviderName.SqlServer, ProviderName.PostgreSQL)]string configString)
+        {
+            using (var db = new DataConnection(configString))
+            {
+                var identity = db.GetTable<TestTable3>()
+                    .InsertOrUpdate(
+                        () => new TestTable3
+                        {
+                            ID = 1,
+                            Name = "Crazy Frog",
+                        },
+                        t => new TestTable3
+                        {
+                            Name = "Crazy Frog IV",
+                        });
                 Console.WriteLine(identity);
             }
         }
