@@ -175,5 +175,47 @@ namespace LinqToDBCrudOperationTest
                     });
             }
         }
+
+        [Test]
+        public void UpdateTest2([ValuesAttribute(ProviderName.SqlServer, ProviderName.PostgreSQL)]string configString)
+        {
+            using (var db = new DataConnection(configString))
+            {
+                db.GetTable<TestTable>()
+                    .Where(t => t.ID == 1)
+                    .Update(t => new TestTable
+                    {
+                        Name = "Crazy Frog",
+                    });
+            }
+        }
+
+        [Test]
+        public void UpdateTest3([ValuesAttribute(ProviderName.SqlServer, ProviderName.PostgreSQL)]string configString)
+        {
+            using (var db = new DataConnection(configString))
+            {
+                db.GetTable<TestTable>()
+                    .Update(
+                    t => t.ID == 1,
+                    t => new TestTable
+                    {
+                        Name = "Crazy Frog",
+                    });
+            }
+        }
+
+        [Test]
+        public void UpdateTest4([ValuesAttribute(ProviderName.SqlServer, ProviderName.PostgreSQL)]string configString)
+        {
+            using (var db = new DataConnection(configString))
+            {
+                db.GetTable<TestTable>()
+                    .Where(t => t.ID == 1)
+                    .Set(t => t.Name, t => "Crazy Frog IV")
+                    .Set(t => t.CreatedOn, t => t.CreatedOn.Value.AddHours(1))
+                    .Update();
+            }
+        }
     }
 }
