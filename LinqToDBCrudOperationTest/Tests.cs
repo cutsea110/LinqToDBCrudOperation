@@ -228,5 +228,14 @@ namespace LinqToDBCrudOperationTest
                     .Delete();
             }
         }
+
+        [Test]
+        public void DeleteBigTableTest([ValuesAttribute(ProviderName.SqlServer)]string configString)
+        {
+            using (var db = new DataConnection(configString))
+            {
+                while (db.GetTable<TestTable>().Take(10000).Delete() > 0) ;
+            }
+        }
     }
 }
