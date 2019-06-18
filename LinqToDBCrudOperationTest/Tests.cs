@@ -6,6 +6,7 @@ using LinqToDB.Mapping;
 using NUnit.Framework;
 
 using System.Data.SqlTypes;
+using System.Linq;
 
 namespace LinqToDBCrudOperationTest
 {
@@ -80,6 +81,7 @@ namespace LinqToDBCrudOperationTest
             using (var db = new DataConnection(configString))
             {
                 db.GetTable<TestTable>()
+                    .Where(t => t.Name == "Crazy Frog")
                     .Insert(
                         db.GetTable<TestTable2>(),
                         t => new TestTable2
