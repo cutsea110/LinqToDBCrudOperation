@@ -137,7 +137,7 @@ namespace LinqToDBCrudOperationTest
                     .InsertOrUpdate(
                         () => new TestTable3
                         {
-                            ID = 1,
+                            ID = 5,
                             Name = "Crazy Frog",
                         },
                         t => new TestTable3
@@ -145,6 +145,20 @@ namespace LinqToDBCrudOperationTest
                             Name = "Crazy Frog IV",
                         });
                 Console.WriteLine(identity);
+            }
+        }
+
+        [Test]
+        public void InsertOrReplaceTest([ValuesAttribute(ProviderName.SqlServer, ProviderName.PostgreSQL)]string configString)
+        {
+            using (var db = new DataConnection(configString))
+            {
+                db.InsertOrReplace(
+                    new TestTable3
+                    {
+                        ID = 5,
+                        Name = "Crazy Frog",
+                    });
             }
         }
     }
