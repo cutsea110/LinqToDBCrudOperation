@@ -217,5 +217,16 @@ namespace LinqToDBCrudOperationTest
                     .Update();
             }
         }
+
+        [Test]
+        public void DeleteTest([ValuesAttribute(ProviderName.SqlServer, ProviderName.PostgreSQL)]string configString)
+        {
+            using (var db = new DataConnection(configString))
+            {
+                db.GetTable<TestTable>()
+                    .Where(t => t.ID == 1)
+                    .Delete();
+            }
+        }
     }
 }
