@@ -237,5 +237,21 @@ namespace LinqToDBCrudOperationTest
                 while (db.GetTable<TestTable>().Take(10000).Delete() > 0) ;
             }
         }
+
+        [Test]
+        public void BulkCopyTest([ValuesAttribute(ProviderName.SqlServer, ProviderName.PostgreSQL)]string configString)
+        {
+            using (var db = new DataConnection(configString))
+            {
+                db.BulkCopy(
+                        new BulkCopyOptions { BulkCopyTimeout = 60 * 10 },
+                        Enumerable.Range(1, 100)
+                        .Select(t => new TestTable
+                        {
+                            Name = t.ToString()
+                        })
+                    );
+            }
+        }
     }
 }
